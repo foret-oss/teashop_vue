@@ -7,7 +7,6 @@ import './assets/css/global.css'
 
 import axios from 'axios'
 //配置请求的根路径
-
 /*
 let protocol = window.location.protocol; //协议
    let host = window.location.host; //主机
@@ -21,6 +20,11 @@ let protocol = window.location.protocol; //协议
    }
 //axios.defaults.baseURL = "http://192.168.1.1:5000"
 */
+axios.interceptors.request.use(config => {
+  console.log(config);
+  config.headers.Authorization = window.sessionStorage.getItem('token');
+  return config;
+})
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false

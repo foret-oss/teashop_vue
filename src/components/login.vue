@@ -1,5 +1,5 @@
 <template>
-    <div class="login_container">
+    <div class="login_container">欢迎来到喜茶~
         <div class="login_box">
             <!--登录表单-->
             <el-form ref="loginFormRef" :model="loginForm" :rules="loginformRules"  label-width="60px" class="login_form">
@@ -66,15 +66,20 @@ export default {
 
 <style lang="less" scoped>
 .login_container{
-    background-color: #d8d9da;
+    background-image: url(../assets/background.png);
+    background-size: cover;
+    opacity: 1;
+    color: rgb(75, 65, 52);
+    font-size: 30px;
+    text-align: center;
     height: 100%;
     padding: 0 10px;
 }
 .login_box{
     width:300px;
     height: 200px;
-    background-color: #fff;
-    border-radius: 5px;
+    background-color: rgb(70, 66, 66);
+    border-radius: 15px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -83,6 +88,7 @@ export default {
 
 .login_form{
     position: absolute;
+    opacity: 1;
     top: 20px;
     right: 30px;
     bottom:0;
@@ -91,6 +97,7 @@ export default {
     box-sizing: border-box;
 }
 .btns{
+    opacity: 1;
     display: flex;
     width: 100%;
     justify-content:flex-start;
