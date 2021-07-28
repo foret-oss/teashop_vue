@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from '../components/login.vue'
 import Home from '../components/home.vue'
 import User from '../components/user.vue'
+import initPage from '../components/initPage.vue'
 
 Vue.use(Router)
 
@@ -15,6 +16,7 @@ const router = new Router({
         component: Home,
         children: [
           { path: '/user', component: User},
+          { path: '/initPage', component: initPage}
         ]
     }
     ]

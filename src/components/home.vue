@@ -14,7 +14,7 @@
       </el-header>
     <!--主题区域-->
     <el-main>
-      <div class="back"></div>
+      <div></div>
     </el-main>
     <!--尾部区域-->
     <el-footer>
@@ -24,7 +24,7 @@
         <el-menu-item index="/order" id="b" @click="orderClick">点单</el-menu-item>
         <el-menu-item index="/foods" id="c" @click="teaClick">百货</el-menu-item>
         <el-menu-item index="/orderForm" id="d" @click="orderFormClick">订单</el-menu-item>
-        <el-menu-item index="/user" id="e" @click="MyClick">我的</el-menu-item>
+        <el-menu-item index="/user" id="e" @click="MyClick(activePath)">我的</el-menu-item>
       </el-menu>
     </el-footer>
   </el-container>
@@ -75,6 +75,7 @@ export default {
       MyClick(activePath){
         //保存导航链接的状态
         window.sessionStorage.setItem('activePath',activePath);
+        console.log(activePath);
         this.activePath = activePath;
         //this.$router.push('/user');
       }
@@ -91,8 +92,9 @@ export default {
 }
 .el-header {
   position: fixed;
+  top: 5px;
   width: 100%;
-  background-color: rgb(238, 235, 235);
+  line-height: 5px;
   color: #333;
   display: flex;
   text-align:left;
@@ -102,11 +104,6 @@ export default {
   width: 100%;
   height: 100px;
   padding: 0;
-}
-.back{
-  height: 20cm;
-   background: url(../assets/xichaHome.png) no-repeat;
-   background-size: contain;
 }
 
 .el-footer {
@@ -186,10 +183,10 @@ export default {
   margin-bottom: 40px;
 }
 .top-icon{
-  display: flex;
   flex-direction: row;
   flex: 50%;
-  flex-basis: 3em;
+  flex-basis: 1em;
+  font-size: 20px;
 }
 </style>
 

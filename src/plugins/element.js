@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Button, Form, FormItem, Input, Message, 
          Container, Main, Header, Footer,
-        Menu, MenuItem, Avatar} from 'element-ui'
+        Menu, MenuItem, Avatar,Upload, Dialog, Alert} from 'element-ui'
 
 
 
@@ -17,3 +17,6 @@ Vue.use(Main)
 Vue.use(Menu)
 Vue.use(MenuItem)
 Vue.use(Avatar)
+Vue.use(Upload)
+Vue.use(Dialog)
+Vue.use(Alert)
