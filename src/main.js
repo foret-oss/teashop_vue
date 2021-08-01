@@ -7,6 +7,7 @@ import './assets/css/global.css'
 import 'amfe-flexible'
 
 import axios from 'axios'
+
 //配置请求的根路径
 /*
 let protocol = window.location.protocol; //协议
@@ -19,14 +20,32 @@ let protocol = window.location.protocol; //协议
        //动态请求地址             协议               主机
        axios.defaults.baseURL = protocol + "//" + host  +":5000";
    }*/
+
+Vue.prototype.$axios = axios
 axios.defaults.baseURL = "http://110.40.138.162:80"
 
+
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.withCredentials = false
+axios.defaults.timeout = '5000'
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+
+
 axios.interceptors.request.use(config => {
-  console.log(config);
-  config.headers.Authorization = window.sessionStorage.getItem('token');
+  console.log("请求头中加token",config);
+
+  if(window.sessionStorage.getItem('token')){
+    config.headers.Authorization = window.sessionStorage.getItem('token');
+  }
   return config;
-})
-Vue.prototype.$http = axios
+},
+error => {
+  return Promise.reject(error);
+}
+)
+
+
 
 Vue.config.productionTip = false
 

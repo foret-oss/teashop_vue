@@ -1,6 +1,6 @@
 <template>
   <div class="login_container">
-    欢迎来到喜茶登录页面~
+    欢迎来到喜茶注册页面~
     <div class="login_box">
       <!--登录表单-->
       <el-form
@@ -10,29 +10,34 @@
         label-width="80px"
         class="login_form"
       >
-        <el-form-item prop="username">
+        <el-form-item prop="userName">
           <el-input
-            v-model="loginForm.username"
+            v-model="loginForm.userName"
             prefix-icon="el-icon-user"
             placeholder="手机号码或邮箱或昵称"
-          ></el-input>
+            ></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
             v-model="loginForm.password"
             prefix-icon="el-icon-lock"
-            show-password
             type="password"
+            show-password
             placeholder="请输入密码"
+            ></el-input>
+        </el-form-item>
+        <el-form-item prop="checkPass">
+          <el-input
+            v-model="loginForm.checkPass"
+            prefix-icon="el-icon-lock"
+            type="password"
+            show-password
+            placeholder="请再次输入密码"
           ></el-input>
         </el-form-item>
         <el-form-item class="btns">
-          <el-button type="primary" :plain="true" @click="login"
-            >登录</el-button
-          >
-          <el-button type="primary" :plain="true" @click="register"
-            >注册</el-button
-          >
+          <el-button type="primary" :plain="true" @click="login">登录</el-button>
+          <el-button type="primary" :plain="true" @click="register">注册</el-button>
           <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
       </el-form>
@@ -54,19 +59,27 @@ export default {
         callback();
       }
     };
-
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.loginForm.password) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
       //这是登录表单的数据绑定对象
       loginForm: {
-        username: "",
+        userName: "",
         password: "",
+        checkPass: "",
       },
-
       //表单验证规则
       loginformRules: {
-        username: [
+        userName: [
           { required: true, message: "请输入用户名", trigger: "blur" },
-          { min: 1, max: 10, message: "长度在 2 到 5 个字符", trigger: "blur" },
+          { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" },
         ],
         password: [
           {
@@ -75,8 +88,9 @@ export default {
             message: "长度在 5 到 15 个字符",
             trigger: "blur",
           },
-          { validator: validatePass, trigger: "blur" },
+           { validator: validatePass, trigger: 'blur' }
         ],
+        checkPass: [{ validator: validatePass2, trigger: "blur" }],
       },
     };
   },
@@ -85,38 +99,39 @@ export default {
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields();
     },
-    login() {
+    register() {
       this.$refs.loginFormRef.validate(
-          (valid) => {
+        async (valid) => {
           if (!valid) return;
-          //this.$message.success("登录成功！");
 
           this.$axios
-            .post("/login", this.loginForm)
+            .post("/register", {username: this.loginForm.userName,
+                                password: this.loginForm.password})
             .then((res) => {
-              console.log("请求登录成功，返回数据", res);
-              if (res.status !== 200) return this.$message.erro("登录失败！");
-              this.$message.success("登录成功！");
+              console.log("请求注册成功，返回数据", res);
+              if (res.status !== 200) return this.$message.erro("用户已存在，注册失败！");
+              this.$message.success("注册成功！");
               window.sessionStorage.setItem("token", res.data.token);
-              window.sessionStorage.setItem('status',res.status);
               window.sessionStorage.setItem('password', this.loginForm.password);
-              window.sessionStorage.setItem("userName", this.loginForm.username);
-              window.sessionStorage.setItem("walletNow", '100');
+              window.sessionStorage.setItem('userName', this.loginForm.userName);
+              window.sessionStorage.setItem('walletNow','0');
               this.$router.push("/user");
             })
             .catch(function (err) {
-              console.log("请求登录失败", err);
+              console.log("请求注册失败", err);
             });
 
-          console.log(
-            console.log("setSession", window.sessionStorage.getItem("userName"))
-          );
+/*
+          this.$message.success("注册成功！");
+          
+          this.$router.push({path: '/user', query: {userName: this.loginForm.userName}});
+          */
         }
       );
     },
-    register() {
-      this.$router.push("/register");
-    },
+    login(){
+        this.$router.push("/login");
+    }
   },
 };
 </script>
@@ -133,9 +148,9 @@ export default {
   padding: 0 10px;
 }
 .login_box {
-  width: 330px;
-  height: 200px;
-  background-color: rgb(65, 104, 148);
+  width: 400px;
+  height: 260px;
+  background-color: rgb(70, 66, 66);
   border-radius: 15px;
   position: absolute;
   top: 50%;

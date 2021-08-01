@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="topBanner" class="slide">
+    <div class="slide">
       <div
         v-for="(imgUrl, index) in bannerList"
         :key="index"
@@ -15,8 +15,8 @@
     </div>
 
     <div class="part2">
-      <div class="self" @click="self_take"></div>
-      <div class="out" @click="out_take"></div>
+      <div class="self" @click="self"></div>
+      <div class="out"></div>
     </div>
 
     <div class="part3" @click="teafoods"></div>
@@ -24,9 +24,6 @@
     </el-button>
      <p id="text">可兑换喜茶券和丰富灵感周边</p>
    
-  </div>
-</template>
-
   </div>
 </template>
 
@@ -45,7 +42,7 @@ export default {
   },
   methods: {
     autoPlay() {
-     //console.log(this.currentIndex);
+      //console.log(this.currentIndex);
       if (this.currentIndex === this.bannerList.length - 1) {
         //当遍历到最后一张图片置零
         this.currentIndex = 0;
@@ -56,32 +53,26 @@ export default {
     },
     play() {
      //setInterval(this.autoPlay, 1000);
-     //setInterval(() => {this.autoPlay()}, 1000);
+     setInterval(() => this.autoPlay(), 2500);
     },
     change(i) {
       this.currentIndex = i;
     },
-    self_take() {
+    self() {
       this.$router.push("/order");
     },
     teafoods() {
       this.$router.push("/foods");
     },
     open() {
-      this.$alert("这是一段内容", "标题名称", {
-        confirmButtonText: "确定",
-        callback: (action) => {
-          this.$message({
-            type: "info",
-            message: `action: ${action}`,
-          });
-        },
+      this.$mb.alert("100", "我的积分", {
+        confirmButtonText: "我知道了", 
       });
     },
   },
- /*mounted() {
+ created() {
     this.play();
-  },*/
+  },
 };
 </script>
 

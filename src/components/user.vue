@@ -1,22 +1,20 @@
 <template>
   <div>
-    <div class="main-1" @click="changeBackgroung">
+    <div class="main-1">
       <el-upload
         action="https://jsonplaceholder.typicode.com/posts/"
         class="background"
         :on-preview="handleBackgroundPreview"
         :on-remove="handleRemove"
-      ><p id="backtext">点击更换背景图</p>
-        <i class="el-icon-plus"></i>
+        ><p id="backtext">点击更换背景图</p>
       </el-upload>
       <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt="背景图" />
       </el-dialog>
-      <el-button type="info" @click="loginOut" class="btn">退出</el-button>
     </div>
 
     <div class="main-2">
-      <p class="viptext1">Hey，chen</p>
+      <p class="viptext1">Hey，{{ this.userNameNow }}</p>
       <p class="viptext2">一口max多料灵感</p>
       <p class="vip"><b>GO会员</b></p>
       <div>
@@ -36,9 +34,18 @@
         ></el-avatar>
       </div>
     </div>
-    <div class="main-3">c
+    <div class="main-3">
+      <div class="points" @click="points"></div>
+      <div class="wallet" @click="wallet">
+        <div class="walletPng"></div>
+        <div class="walletText">
+          <p>{{ this.walletNow }}</p>
+          <p>钱包</p>
+        </div>
+      </div>
+      <div class="axiyouli"></div>
     </div>
-    <div class="main-4">d</div>
+    <div class="main-4"></div>
   </div>
 </template>
 
@@ -49,9 +56,15 @@ export default {
       imageUrl: "",
       dialogImageUrl: "",
       dialogVisible: false,
+      userNameNow: window.sessionStorage.getItem("userName"),
+      walletBefore: window.sessionStorage.getItem("walletNow"),
+      walletNow: window.sessionStorage.getItem("walletNow"),
     };
   },
   methods: {
+    /*changeWallet(){
+      this.wallet = this.wallet + this.$route.query.wallet;
+    },*/
     loginOut() {
       window.sessionStorage.clear();
       this.$router.push("/login");
@@ -77,10 +90,33 @@ export default {
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
-    //惦记文件列表中已上传的文件时候的钩子
+    //点击文件列表中已上传的文件时候的钩子
     handleBackgroundPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+    },
+    wallet() {
+      //window.sessionStorage.setItem("walletBefore", this.walletBefore);
+      this.$axios
+        .post("/getuser",{username: window.sessionStorage.getItem('userName'),
+                          password: window.sessionStorage.getItem('password')})
+        .then((res) => {
+          console.log("请求钱包,用户名成功，返回数据：", res.data.money);
+          window.sessionStorage.setItem('walletNow',res.data.money);
+        })
+        .catch(function (err) {
+          console.log("请求钱包，用户名失败", err);
+        });  
+
+      this.$router.push("/wallet");
+    },
+
+    points() {
+      console.log("usernamenow", this.userNameNow);
+      console.log(
+        "getSession",
+        window.sessionStorage.getItem("userName"),
+      );
     },
   },
 };
@@ -91,18 +127,57 @@ export default {
   height: 8rem;
   background: url(../assets/background1.png);
   background-size: contain;
-  overflow: scroll;
 }
-.main-2,
-.main-3,
+.main-2 {
+  background: rgb(238, 235, 235);
+  height: 3rem;
+}
+.main-3 {
+  background: rgb(238, 235, 235);
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  height: 3rem;
+  padding: 10px 5px;
+  .points {
+    background: url(../assets/points.jpg) no-repeat;
+    background-size: contain;
+    width: 50%;
+    padding: 10px;
+  }
+  .wallet {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    padding-right: 4px;
+    .walletPng {
+      background: url(../assets/wallet.jpg) no-repeat;
+      background-size: cover;
+      text-align: center;
+      height: 1.5rem;
+    }
+    .walletText {
+      font-size: 0.4rem;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      line-height: 8px;
+      text-align: center;
+      height: 1.5rem;
+      background-color: white;
+    }
+  }
+  .axiyouli {
+    background: url(../assets/axiyouli.png) no-repeat;
+    background-size: contain;
+    width: 25%;
+  }
+}
 .main-4 {
   background: rgb(238, 235, 235);
   height: 10cm;
-  overflow: scroll;
 }
 #touxiang {
   position: absolute;
-  top: 45%;
+  top: 8rem;
   left: 65%;
   height: 3rem;
   width: 3rem;
@@ -140,7 +215,7 @@ export default {
   position: absolute;
   width: 3rem;
   height: 3rem;
-  top: 45%;
+  top: 8rem;
   left: 64%;
   overflow: hidden;
 }
@@ -160,16 +235,18 @@ export default {
   height: 3rem;
   display: block;
 }
-.background{
+.background {
   font-size: 0.5rem;
   width: 100%;
   height: 8rem;
   opacity: 1;
   overflow: hidden;
 }
-#backtext{
-  color: #409eff;
+#backtext {
+  color: #bdbfc2;
   display: flex;
-  right: 0.2rem;
+  position: absolute;
+  top: 7rem;
+  font-size: 15px;
 }
 </style>
