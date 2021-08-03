@@ -5,15 +5,20 @@
     <el-container class="home_container">
       <!--头部区域-->
       <el-header>
-        <div class="top-icon">
-          <i class="el-icon-arrow-left" @click="previousPage"></i>
-          <i class="el-icon-sunny"></i>
-          <i class="el-icon-edit"></i>
-          <i class="el-icon-share"></i>
+        <div class="top-icon" @click="previousPage">
+          <i class="el-icon-arrow-left"></i>
+          <p class="headText">返回</p>
         </div>
         <div class="btnForm">
-        <el-button type="info" @click="loginOut" class="btn">退出</el-button>
-        <el-button v-show="this.status !== '200'"  type="primary" :plain="true" @click="login" class="loginBtn">尚未登录</el-button>
+          <el-button type="info" @click="loginOut" class="btn">退出</el-button>
+          <el-button
+            v-show="this.status !== '200'"
+            type="primary"
+            :plain="true"
+            @click="login"
+            class="loginBtn"
+            >尚未登录</el-button
+          >
         </div>
       </el-header>
       <!--主题区域-->
@@ -29,7 +34,7 @@
           <el-menu-item index="/initPage" id="a" @click="MyClick('/initPage')"
             >首页</el-menu-item
           >
-          <el-menu-item index="/order" id="b" @click="MyClick('/order')"
+          <el-menu-item index="/order" id="b" @click="orderClick('/order')"
             >点单</el-menu-item
           >
           <el-menu-item index="/foods" id="c" @click="MyClick('/foods')"
@@ -54,7 +59,6 @@ export default {
     this.activePath = window.sessionStorage.getItem("activePath");
   },
 
-
   data() {
     return {
       //底部导航栏数据
@@ -62,7 +66,8 @@ export default {
 
       //被激活的链接（通过Aplication下的session查看ActivePath
       activePath: "",
-      status: window.sessionStorage.getItem('status')
+      status: window.sessionStorage.getItem("status"),
+      teaGroup: ["暴柠家族", "果茶家族", "波波家族","喜茶制冰","纯茶","茗茶/牛乳茶"],
     };
   },
   methods: {
@@ -71,7 +76,6 @@ export default {
       this.$router.push("/login");
     },
 
-    
     //获取导航栏菜单(配置axios)
     /*
     async getMenuList() {
@@ -89,19 +93,41 @@ export default {
     MyClick(activePath) {
       //保存导航链接的状态
       window.sessionStorage.setItem("activePath", activePath);
-      console.log("session导航栏链接状态",activePath);
+      console.log("session导航栏链接状态", activePath);
       this.activePath = activePath;
     },
 
-
     login() {
-        this.$router.push("/login");
+      this.$router.push("/login");
     },
     homeClick() {
       //this.$router.push('/initPage');
     },
     orderClick() {
-      //this.$router.push('/order');
+      this.$axios
+        .post("/getshops")
+        .then((res) => {
+          console.log("请求门店成功，返回数据", res);
+          window.sessionStorage.setItem("shops", JSON.stringify(res.data));
+          window.sessionStorage.setItem("NowShop", JSON.stringify(res.data[0]));
+          window.sessionStorage.setItem('shopCartNumAll',0);
+        })
+        .catch(function (err) {
+          console.log("请求门店失败", err);
+        });
+      for (let i = 0; i < this.teaGroup.length; i++) {
+        this.$axios
+          .post("/gettea", {
+            category: this.teaGroup[i],
+          })
+          .then((res) => {
+            console.log("请求奶茶成功，返回数据", res);
+            window.sessionStorage.setItem("teaGroup"+i,JSON.stringify(res.data));
+          })
+          .catch(function (err) {
+            console.log("请求奶茶失败", err);
+          });
+      }
     },
     teaClick() {
       //this.$router.push('/teashop');
@@ -109,19 +135,31 @@ export default {
     orderFormClick() {
       //this.$router.push('/oderForm');
     },
-    previousPage(){
-      var activep = window.sessionStorage.getItem('activePath');
+    previousPage() {
+      var activep = window.sessionStorage.getItem("activePath");
       window.sessionStorage.setItem("activePath", activep);
-      console.log("session导航栏链接状态",activep);
+      console.log("session导航栏链接状态", activep);
       this.activePath = activep;
       this.$router.go(-1);
-    }
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
-.btnForm{
+.top-icon {
+  display: flex;
+  flex-direction: row;
+  font-size: 20px;
+  height: 40px;
+}
+.el-icon-arrow-left {
+  transform: translate(-15px);
+}
+.headText {
+  transform: translate(-5px, -12px);
+}
+.btnForm {
   display: flex;
   position: absolute;
   top: 10px;
@@ -136,21 +174,21 @@ export default {
   width: 2rem;
   left: 8.8rem;
   top: 30%;
-  transform: translate(-50%, -50%)
+  transform: translate(-50%, -50%);
 }
-.loginBtn{
+.loginBtn {
   position: absolute;
   width: 2rem;
   margin: 10px;
   left: 8.5rem;
   top: 80%;
-  transform: translate(-50%, -30%)
+  transform: translate(-50%, -30%);
 }
 .el-button--primary.is-plain {
-    color: white; 
-    background: #9a9aa3; 
-    width: 2rem;
-    padding: 10px;
+  color: white;
+  background: #9a9aa3;
+  width: 2rem;
+  padding: 10px;
 }
 .el-header {
   position: fixed;
@@ -237,12 +275,6 @@ export default {
 .home_container {
   height: 100%;
   margin-bottom: 40px;
-}
-.top-icon {
-  flex-direction: row;
-  flex: 50%;
-  flex-basis: 1em;
-  font-size: 20px;
 }
 </style>
 

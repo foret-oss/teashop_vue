@@ -102,6 +102,9 @@ export default {
               window.sessionStorage.setItem('password', this.loginForm.password);
               window.sessionStorage.setItem("userName", this.loginForm.username);
               window.sessionStorage.setItem("walletNow", '100');
+              window.sessionStorage.setItem('shopCartNumAll',0);
+              window.sessionStorage.setItem('priceNow',0);
+              window.sessionStorage.setItem('phonenumber','13398822784');
               this.$router.push("/user");
             })
             .catch(function (err) {

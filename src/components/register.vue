@@ -14,7 +14,14 @@
           <el-input
             v-model="loginForm.userName"
             prefix-icon="el-icon-user"
-            placeholder="手机号码或邮箱或昵称"
+            placeholder="昵称"
+            ></el-input>
+        </el-form-item>
+        <el-form-item prop="phonenumber">
+          <el-input
+            v-model="loginForm.phonenumber"
+            prefix-icon="el-icon-phone-outline"
+            placeholder="请输入手机号码"
             ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -74,12 +81,17 @@ export default {
         userName: "",
         password: "",
         checkPass: "",
+        phonenumber: ''
       },
       //表单验证规则
       loginformRules: {
         userName: [
           { required: true, message: "请输入用户名", trigger: "blur" },
           { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" },
+        ],
+        phonenumber: [
+          { required: true, message: "请输入手机号码", trigger: "blur" },
+          { min: 11, max: 11, message: "手机号码格式不正确！", trigger: "blur" },
         ],
         password: [
           {
@@ -109,16 +121,17 @@ export default {
                                 password: this.loginForm.password})
             .then((res) => {
               console.log("请求注册成功，返回数据", res);
-              if (res.status !== 200) return this.$message.erro("用户已存在，注册失败！");
+              if (res.status !== 200 || res.status==403) return this.$message.erro("用户已存在，注册失败！");
               this.$message.success("注册成功！");
               window.sessionStorage.setItem("token", res.data.token);
               window.sessionStorage.setItem('password', this.loginForm.password);
               window.sessionStorage.setItem('userName', this.loginForm.userName);
               window.sessionStorage.setItem('walletNow','0');
+              window.sessionStorage.setItem('phonenumber',this.loginForm.phonenumber);
               this.$router.push("/user");
             })
             .catch(function (err) {
-              console.log("请求注册失败", err);
+              console.log("用户已存在，注册失败", err);
             });
 
 /*
@@ -149,7 +162,7 @@ export default {
 }
 .login_box {
   width: 400px;
-  height: 260px;
+  height: 330px;
   background-color: rgb(70, 66, 66);
   border-radius: 15px;
   position: absolute;

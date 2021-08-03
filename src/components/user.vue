@@ -96,12 +96,12 @@ export default {
       this.dialogVisible = true;
     },
     wallet() {
-      //window.sessionStorage.setItem("walletBefore", this.walletBefore);
+      window.sessionStorage.setItem("walletBefore", this.walletBefore);
       this.$axios
         .post("/getuser",{username: window.sessionStorage.getItem('userName'),
                           password: window.sessionStorage.getItem('password')})
         .then((res) => {
-          console.log("请求钱包,用户名成功，返回数据：", res.data.money);
+          console.log("请求钱包,用户名成功，当前钱包数据：", res.data.money);
           window.sessionStorage.setItem('walletNow',res.data.money);
         })
         .catch(function (err) {

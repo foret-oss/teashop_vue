@@ -3,7 +3,8 @@ import { Button, Form, FormItem, Input, Message,
          Container, Main, Header, Footer,
         Menu, MenuItem, Avatar,Upload, Dialog, Alert,
         Radio,RadioGroup, Switch, Aside,Row,Col, Card,
-        MessageBox} from 'element-ui'
+        MessageBox, Drawer, Table,TableColumn, InputNumber,
+        Badge, PageHeader, Slider, Tabs,TabPane} from 'element-ui'
 
 
 
@@ -30,3 +31,12 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Card)
 Vue.prototype.$mb = MessageBox
+Vue.use(Drawer)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(InputNumber)
+Vue.use(Badge)
+Vue.use(PageHeader)
+Vue.use(Slider)
+Vue.use(Tabs)
+Vue.use(TabPane)

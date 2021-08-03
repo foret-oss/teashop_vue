@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import BScroll from "better-scroll"
+
 import login from '../components/login.vue'
 import Home from '../components/home.vue'
 import User from '../components/user.vue'
@@ -10,16 +10,18 @@ import Foods from '../components/foods.vue'
 import OrderForm from '../components/orderForm'
 import Register from '../components/register.vue'
 import Wallet from '../components/wallet.vue'
+import changeShop from '../components/changeShop.vue'
+import payForTea from '../components/payForTea.vue'
 
 
 Vue.use(Router)
-
 
 const router = new Router({
     routes: [
       { path: '/', redirect: '/login'},
       { path: '/login', component: login },
       { path: '/register', component: Register},
+      { path: '/payForTea', component: payForTea},
       { 
         path: '/home', 
         component: Home,
@@ -30,6 +32,7 @@ const router = new Router({
           { path: '/foods', component: Foods},
           { path: '/orderForm', component: OrderForm},
           { path: '/wallet', component: Wallet},
+          { path: '/changeShop', component: changeShop},
         ]
     }
     ]

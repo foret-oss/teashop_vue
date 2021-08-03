@@ -91,8 +91,8 @@ export default {
         });  
 
 
-        //var w = Number(window.sessionStorage.getItem('walletBefore')) + Number(this.rechargeParams.totalAmt);
-       // window.sessionStorage.setItem('walletNow',w);
+        var w = Number(window.sessionStorage.getItem('walletBefore')) + Number(this.rechargeParams.totalAmt);
+       window.sessionStorage.setItem('walletNow',w);
         this.$router.push({
           path: "/user",
           query: { wallet: this.rechargeParams.totalAmt },
