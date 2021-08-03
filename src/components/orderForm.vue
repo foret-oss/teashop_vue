@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" class="head1">
       <el-tab-pane class="tab1" label="当前订单" name="first">
         <div class="head2">
-          <el-button class="el-icon-map-location" @click="check">{{
+          <el-button class="el-icon-map-location" @click="check" id="btn">{{
             this.NowShop.shopname
           }}</el-button>
           <div class="making">
@@ -11,17 +11,17 @@
             <p class="el-icon-arrow-right"></p>
           </div>
         </div>
-        <div class="part1">
+        <div class="part1" @click ="handleClick">
           <p class="orderNumber">8004</p>
           <p class="text1">前方2单/5杯制作中</p>
-          <p class="text2">￥64(共2件)</p>
+          <p class="text2">￥21(共1件)</p>
         </div>
       </el-tab-pane>
-      <el-tab-pane class="tab2" label="历史订单" name="second">
+      <el-tab-pane @click ="handleClick" class="tab2" label="历史订单" name="second" >
 
         <div class="part2" v-for="(order, i) in historyOrders" :key="i">
           <div class="head2">
-            <el-button class="el-icon-map-location" @click="check"
+            <el-button class="el-icon-map-location" @click="check" v-show="NowShop.shopname !== null"
               >{{ NowShop.shopname }}
             </el-button>
             <div class="making">
@@ -43,7 +43,7 @@
               <!--奶茶信息展示-->
               <div class="milk-content">
                 <p class="name">{{ order.teaname }}</p>
-                <p class="price">￥{{ order.basicprice }}</p>
+                <p class="price">￥{{ order.basicprice + 'x' + order.number}}</p>
               </div>
             </div>
           </div>
@@ -58,19 +58,37 @@ export default {
     return {
       activeName: "first",
       NowShop: JSON.parse(window.sessionStorage.getItem("NowShop")),
-      historyOrders: JSON.parse(window.sessionStorage.getItem("historyOrders")),
+      historyOrders: [],
     };
   },
   methods: {
     check() {
       console.log("当前门店", this.NowShop.shopname);
     },
+    handleClick(){
+        this.$axios
+          .post("/gethistory", {
+            username: window.sessionStorage.getItem("userName"),
+            password: window.sessionStorage.getItem('password'),
+          })
+          .then((res) => {
+            console.log("请求历史订单成功，返回数据：", res);
+            this.historyOrders.push(res.data);
+            console.log("历史订单",this.historyOrders);
+          })
+          .catch(function (err) {
+            console.log("请求历史订单失败", err);
+          });
+    }
   },
 };
 </script>
 
 
 <style lang="less" scoped>
+#btn{
+    background: rgb(245, 243, 243);
+}
 .head1 {
   position: absolute;
   top: 30px;
@@ -115,10 +133,9 @@ export default {
     display: flex;
     flex-direction: row;
     transform: translate(10px,10px);
-
     .milk-content{
         font-size: 15px;
-        transform: translate(250px,-10px);
+        transform: translate(100px,-10px);
     }
 }
 </style>

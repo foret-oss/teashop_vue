@@ -80,13 +80,14 @@ export default {
         this.$axios
           .post("/purchase", {
             username: window.sessionStorage.getItem("userName"),
+            password: window.sessionStorage.getItem('password'),
             shopname: this.shop.shopname,
             teaname: this.teasOrderd[i].teaname,
             sweet: "微甜",
             condition: "少量冰",
             addmaterial: "不加料",
-            number: window.sessionStorage.getItem("shopCartNumAll"),
-            totalprice: this.price,
+            number: Number(window.sessionStorage.getItem("shopCartNumAll")),
+            totalprice: Number(this.price),
           })
           .then((res) => {
             console.log("请求支付成功，返回数据：", res);

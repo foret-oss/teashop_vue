@@ -77,22 +77,31 @@ export default {
         this.$message.success(
           "充值成功！充值金额为 " + this.rechargeParams.totalAmt
         );
-
+        //请求钱包
         this.$axios
         .post("/recharge",{username: window.sessionStorage.getItem('userName'),
                           password: window.sessionStorage.getItem('password'),
-                          money: this.rechargeParams.totalAmt})
+                          money: Number(this.rechargeParams.totalAmt)})
         .then((res) => {
-          console.log("请求充值后的钱包成功，返回数据：", res.data.money);
+          console.log("请求充值成功，返回数据");
+        })
+        .catch(function (err) {
+          console.log("请求充值失败", err);
+        });  
+      //获取钱包
+        this.$axios
+        .post("/getuser",{username: window.sessionStorage.getItem('userName'),
+                          password: window.sessionStorage.getItem('password'),})
+        .then((res) => {
+          console.log("请求当前余额成功，返回数据",res.data.money);
           window.sessionStorage.setItem('walletNow',res.data.money);
         })
         .catch(function (err) {
-          console.log("请求充值后的钱包失败", err);
+          console.log("请求当前余额失败", err);
         });  
 
-
-        var w = Number(window.sessionStorage.getItem('walletBefore')) + Number(this.rechargeParams.totalAmt);
-       window.sessionStorage.setItem('walletNow',w);
+        //var w = Number(window.sessionStorage.getItem('walletBefore')) + Number(this.rechargeParams.totalAmt);
+       //window.sessionStorage.setItem('walletNow',w);
         this.$router.push({
           path: "/user",
           query: { wallet: this.rechargeParams.totalAmt },
